@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBackpackFramework", "CustomBackpackFramework.csproj", "{CCC384BB-FEE9-427B-9461-50FB695CD77B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCC384BB-FEE9-427B-9461-50FB695CD77B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCC384BB-FEE9-427B-9461-50FB695CD77B}.Debug|x86.Build.0 = Debug|Any CPU
+		{CCC384BB-FEE9-427B-9461-50FB695CD77B}.Release|x86.ActiveCfg = Release|x86
+		{CCC384BB-FEE9-427B-9461-50FB695CD77B}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F2A93D7-3D48-4B6C-88EF-582E37954D3D}
+	EndGlobalSection
+EndGlobal
