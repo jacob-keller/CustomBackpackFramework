@@ -5,10 +5,14 @@ using Microsoft.Xna.Framework.Input;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.Locations;
 using StardewValley.Menus;
+using StardewValley.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using xTile.Dimensions;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace CustomBackpack
 {
@@ -67,7 +71,92 @@ namespace CustomBackpack
             helper.ConsoleCommands.Add("custombackpack", "Manually set backpack slots. Usage: custombackpack <slotnumber>", SetSlots);
 
             var harmony = new Harmony(ModManifest.UniqueID);
-            harmony.PatchAll();
+
+            harmony.Patch(
+                original: AccessTools.Constructor(typeof(InventoryMenu), new Type[] { typeof(int), typeof(int), typeof(bool), typeof(IList<Item>), typeof(InventoryMenu.highlightThisItem), typeof(int), typeof(int), typeof(int), typeof(int), typeof(bool) }),
+                postfix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_Postfix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.hover)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_hover_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ShopMenu), nameof(ShopMenu.performHoverAction)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.ShopMenu_performHoverAction_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ShopMenu), nameof(ShopMenu.receiveScrollWheelAction)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.ShopMenu_receiveScrollWheelAction_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.getInventoryPositionOfClick)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_getInventoryPositionOfClick_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.leftClick)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_leftClick_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.rightClick)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_rightClick_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.setUpForGamePadMode)),
+                postfix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_setUpForGamePadMode_Postfix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(IClickableMenu), nameof(IClickableMenu.applyMovementKey), new Type[] { typeof(int) }),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.IClickableMenu_applyMovementKey_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ItemGrabMenu), "customSnapBehavior"),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.ItemGrabMenu_customSnapBehavior_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(InventoryMenu), nameof(InventoryMenu.draw), new Type[] { typeof(SpriteBatch), typeof(int), typeof(int), typeof(int) }),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_draw_Prefix)),
+                postfix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_draw_Postfix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SeedShop), nameof(SeedShop.draw)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.SeedShop_draw_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.performAction), new Type[] { typeof(string[]), typeof(Farmer), typeof(Location) }),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.GameLocation_performAction_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.answerDialogueAction)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.GameLocation_answerDialogueAction_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.PropertyGetter(typeof(SpecialItem), "displayName"),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.SpecialItem_displayName_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SpecialItem), nameof(SpecialItem.getTemporarySpriteForHoldingUp)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.SpecialItem_getTemporarySpriteForHoldingUp_Prefix))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Farmer), nameof(Farmer.shiftToolbar)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.Farmer_shiftToolbar_Prefix))
+            );
 
             scrollTexture = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1);
             scrollTexture.SetData(new Color[] { Config.BackgroundColor });

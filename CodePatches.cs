@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Menus;
@@ -21,11 +22,8 @@ namespace CustomBackpack
         public static ClickableTextureComponent downArrow;
         public static ClickableTextureComponent expandButton;
 
-        [HarmonyPatch(typeof(InventoryMenu), new Type[] { typeof(int), typeof(int), typeof(bool), typeof(IList<Item>), typeof(InventoryMenu.highlightThisItem), typeof(int), typeof(int), typeof(int), typeof(int), typeof(bool) })]
-        [HarmonyPatch(MethodType.Constructor)]
-        public class InventoryMenu_Patch
-        {
-            public static void Postfix(InventoryMenu __instance, int xPosition, int yPosition, bool playerInventory, IList<Item> actualInventory, InventoryMenu.highlightThisItem highlightMethod, int capacity, int rows, int horizontalGap, int verticalGap, bool drawSlots)
+        public class ObjectPatches {
+            public static void InventoryMenu_Postfix(InventoryMenu __instance, int xPosition, int yPosition, bool playerInventory, IList<Item> actualInventory, InventoryMenu.highlightThisItem highlightMethod, int capacity, int rows, int horizontalGap, int verticalGap, bool drawSlots)
             {
                 if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count)
                     return;
@@ -81,44 +79,26 @@ namespace CustomBackpack
 
             }
 
-        }
-
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.hover))]
-        public class InventoryMenu_hover_Patch
-        {
-            public static void Prefix(InventoryMenu __instance, int x, int y)
+            public static void InventoryMenu_hover_Prefix(InventoryMenu __instance, int x, int y)
             {
                 if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count || !__instance.isWithinBounds(x, y))
                     return;
                 OnHover(ref __instance, x, y);
             }
-        }
-        
-        [HarmonyPatch(typeof(ShopMenu), nameof(ShopMenu.performHoverAction))]
-        public class ShopMenu_performHoverAction_Patch
-        {
-            public static void Prefix(ShopMenu __instance, int x, int y)
+
+            public static void ShopMenu_performHoverAction_Prefix(ShopMenu __instance, int x, int y)
             {
                 if (!Config.ModEnabled || (__instance.inventory.actualInventory != Game1.player.Items) || __instance.inventory.capacity >= __instance.inventory.actualInventory.Count || !__instance.inventory.isWithinBounds(x, y))
                     return;
                 OnHover(ref __instance.inventory, x, y);
             }
-        }
-        
-        [HarmonyPatch(typeof(ShopMenu), nameof(ShopMenu.receiveScrollWheelAction))]
-        public class ShopMenu_receiveScrollWheelAction_Patch
-        {
-            public static bool Prefix(ShopMenu __instance, int direction)
+
+            public static bool ShopMenu_receiveScrollWheelAction_Prefix(ShopMenu __instance, int direction)
             {
                 return !Config.ModEnabled || (__instance.inventory.actualInventory != Game1.player.Items) || __instance.inventory.capacity >= __instance.inventory.actualInventory.Count || !__instance.inventory.isWithinBounds(Game1.getMouseX(), Game1.getMouseY());
             }
-        }
 
-        
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.getInventoryPositionOfClick))]
-        public class InventoryMenu_getInventoryPositionOfClick_Patch
-        {
-            public static bool Prefix(InventoryMenu __instance, int x, int y, ref int __result)
+            public static bool InventoryMenu_getInventoryPositionOfClick_Prefix(InventoryMenu __instance, int x, int y, ref int __result)
             {
                 if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count)
                     return true;
@@ -129,12 +109,8 @@ namespace CustomBackpack
                 }
                 return true;
             }
-        }
 
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.leftClick))]
-        public class InventoryMenu_leftClick_Patch
-        {
-            public static bool Prefix(InventoryMenu __instance, int x, int y, Item toPlace, ref Item __result)
+            public static bool InventoryMenu_leftClick_Prefix(InventoryMenu __instance, int x, int y, Item toPlace, ref Item __result)
             {
                 if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count)
                     return true;
@@ -145,12 +121,8 @@ namespace CustomBackpack
                 }
                 return true;
             }
-        }
-        
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.rightClick))]
-        public class InventoryMenu_rightClick_Patch
-        {
-            public static bool Prefix(InventoryMenu __instance, int x, int y, Item toAddTo, ref Item __result)
+
+            public static bool InventoryMenu_rightClick_Prefix(InventoryMenu __instance, int x, int y, Item toAddTo, ref Item __result)
             {
                 if (!Config.ModEnabled || !__instance.playerInventory || __instance.capacity >= __instance.actualInventory.Count)
                     return true;
@@ -161,12 +133,8 @@ namespace CustomBackpack
                 }
                 return true;
             }
-        }
-        
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.setUpForGamePadMode))]
-        public class InventoryMenu_setUpForGamePadMode_Patch
-        {
-            public static void Postfix(InventoryMenu __instance)
+
+            public static void InventoryMenu_setUpForGamePadMode_Postfix(InventoryMenu __instance)
             {
                 if (!Config.ModEnabled || __instance.inventory is null || __instance.capacity >= __instance.actualInventory.Count)
                     return;
@@ -178,12 +146,8 @@ namespace CustomBackpack
                     var y = x;
                 }
             }
-        }
 
-        [HarmonyPatch(typeof(IClickableMenu), nameof(IClickableMenu.applyMovementKey), new Type[] {typeof(int) })]
-        public class IClickableMenu_moveCursorInDirection_Patch
-        {
-            public static bool Prefix(IClickableMenu __instance, int direction)
+            public static bool IClickableMenu_applyMovementKey_Prefix(IClickableMenu __instance, int direction)
             {
                 if (!Config.ModEnabled || __instance.currentlySnappedComponent is null)
                     return true;
@@ -286,12 +250,8 @@ namespace CustomBackpack
                 }
                 return false;
             }
-        }
-        
-        [HarmonyPatch(typeof(ItemGrabMenu), "customSnapBehavior")]
-        public class ItemGrabMenu_customSnapBehavior_Patch
-        {
-            public static bool Prefix(ItemGrabMenu __instance, int direction, int oldRegion, int oldID)
+
+            public static bool ItemGrabMenu_customSnapBehavior_Prefix(ItemGrabMenu __instance, int direction, int oldRegion, int oldID)
             {
                 if (!Config.ModEnabled || __instance.inventory is null || !__instance.inventory.Scrolling())
                     return true;
@@ -352,12 +312,8 @@ namespace CustomBackpack
                 __instance.snapCursorToCurrentSnappedComponent();
                 return false;
             }
-        }
 
-        [HarmonyPatch(typeof(InventoryMenu), nameof(InventoryMenu.draw), new Type[] { typeof(SpriteBatch), typeof(int), typeof(int), typeof(int) })]
-        public class InventoryMenu_draw_Patch
-        {
-            public static void Prefix(InventoryMenu __instance, ref object[] __state)
+            public static void InventoryMenu_draw_Prefix(InventoryMenu __instance, ref object[] __state)
             {
                 try
                 {
@@ -375,7 +331,7 @@ namespace CustomBackpack
                     SMonitor.Log($"Failed in {nameof(InventoryMenu_draw_Prefix)}:\n{ex}", LogLevel.Error);
                 }
             }
-            public static void Postfix(SpriteBatch b, InventoryMenu __instance, ref object[] __state)
+            public static void InventoryMenu_draw_Postfix(SpriteBatch b, InventoryMenu __instance, ref object[] __state)
             {
                 try
                 {
@@ -389,11 +345,8 @@ namespace CustomBackpack
                     SMonitor.Log($"Failed in {nameof(InventoryMenu_draw_Postfix)}:\n{ex}", LogLevel.Error);
                 }
             }
-        }
-        [HarmonyPatch(typeof(SeedShop), nameof(SeedShop.draw))]
-        public class SeedShop_draw_Patch
-        {
-            public static bool Prefix(SeedShop __instance, SpriteBatch b)
+
+            public static bool SeedShop_draw_Prefix(SeedShop __instance, SpriteBatch b)
             {
                 if (!Config.ModEnabled || !dataDict.Any())
                     return true;
@@ -414,11 +367,8 @@ namespace CustomBackpack
                 }
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.performAction))]
-        public class GameLocation_performAction_Patch
-        {
-            public static bool Prefix(GameLocation __instance, string[] action, Farmer who, Location tileLocation, ref bool __result)
+
+            public static bool GameLocation_performAction_Prefix(GameLocation __instance, string[] action, Farmer who, Location tileLocation, ref bool __result)
             {
                 if (!Config.ModEnabled || !dataDict.Any())
                     return true;
@@ -444,11 +394,8 @@ namespace CustomBackpack
                 }
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.answerDialogueAction))]
-        public class GameLocation_answerDialogueAction_Patch
-        {
-            public static bool Prefix(GameLocation __instance, string questionAndAnswer, string[] questionParams, ref bool __result)
+
+            public static bool GameLocation_answerDialogueAction_Prefix(GameLocation __instance, string questionAndAnswer, string[] questionParams, ref bool __result)
             {
                 if (!Config.ModEnabled || questionAndAnswer != "Backpack_Purchase" || !dataDict.Any())
                     return true;
@@ -479,12 +426,8 @@ namespace CustomBackpack
                 }
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(SpecialItem), "displayName")]
-        [HarmonyPatch(MethodType.Getter)]
-        public class SpecialItem_displayName_Patch
-        {
-            public static bool Prefix(SpecialItem __instance, ref string __result)
+
+            public static bool SpecialItem_displayName_Prefix(SpecialItem __instance, ref string __result)
             {
                 if (!Config.ModEnabled || __instance.which.Value != 99 || !dataDict.Any())
                     return true;
@@ -492,11 +435,8 @@ namespace CustomBackpack
                 __result = __instance.Name;
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(SpecialItem), nameof(SpecialItem.getTemporarySpriteForHoldingUp))]
-        public class SpecialItem_getTemporarySpriteForHoldingUp_Patch
-        {
-            public static bool Prefix(SpecialItem __instance, Vector2 position, ref TemporaryAnimatedSprite __result)
+
+            public static bool SpecialItem_getTemporarySpriteForHoldingUp_Prefix(SpecialItem __instance, Vector2 position, ref TemporaryAnimatedSprite __result)
             {
                 if (!Config.ModEnabled || __instance.which.Value != 99 || !dataDict.Any())
                     return true;
@@ -512,11 +452,8 @@ namespace CustomBackpack
                 };
                 return false;
             }
-        }
-        [HarmonyPatch(typeof(Farmer), nameof(Farmer.shiftToolbar))]
-        private static class Farmer_shiftToolbar_Patch
-        {
-            public static bool Prefix(Farmer __instance, bool right)
+
+            public static bool Farmer_shiftToolbar_Prefix(Farmer __instance, bool right)
             {
                 if (!Config.ModEnabled || Config.ShiftRows < 1 || Config.ShiftRows >= __instance.Items.Count / 12 || __instance.Items is null || __instance.Items.Count < 37 || __instance.UsingTool || Game1.dialogueUp || !__instance.CanMove || __instance.Items.HasAny() || Game1.eventUp || Game1.farmEvent != null)
                     return true;
