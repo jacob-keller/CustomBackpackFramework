@@ -22,7 +22,7 @@ namespace CustomBackpack
         public static ModEntry context;
 
 
-        public static string dictPath = "aedenthorn.CustomBackpack/dictionary";
+        public static string dictPath = "platinummyr.CustomBackpackFramework/dictionary";
 
         public static Dictionary<int, BackPackData> dataDict = new Dictionary<int, BackPackData>();
         public static int IDOffset = 0;
