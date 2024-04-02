@@ -6,4 +6,5 @@
   "UniqueID": "platinummyr.CustomBackpackFramework",
   "EntryDll": "CustomBackpackFramework.dll",
   "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": [ "Nexus:21588" ]
 }
