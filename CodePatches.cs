@@ -359,23 +359,35 @@ namespace CustomBackpack
         {
             public static void Prefix(InventoryMenu __instance, ref object[] __state)
             {
-                if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count)
-                    return;
-                __state = new object[]{
-                    Game1.player.Items,
-                    __instance.inventory
-                };
+                try
+                {
+                    if (!Config.ModEnabled || (__instance.actualInventory != Game1.player.Items) || __instance.capacity >= __instance.actualInventory.Count)
+                        return;
+                    __state = new object[]{
+                        Game1.player.Items,
+                        __instance.inventory
+                    };
 
-                __instance.actualInventory = new List<Item>(__instance.actualInventory.Skip(__instance.capacity / __instance.rows * scrolled.Value).Take(__instance.capacity));
-                __instance.inventory = new List<ClickableComponent>(__instance.inventory.Skip(__instance.capacity / __instance.rows * scrolled.Value).Take(__instance.capacity));
+                    __instance.actualInventory = new List<Item>(__instance.actualInventory.Skip(__instance.capacity / __instance.rows * scrolled.Value).Take(__instance.capacity));
+                    __instance.inventory = new List<ClickableComponent>(__instance.inventory.Skip(__instance.capacity / __instance.rows * scrolled.Value).Take(__instance.capacity));
+                } catch (Exception ex)
+                {
+                    SMonitor.Log($"Failed in {nameof(InventoryMenu_draw_Prefix)}:\n{ex}", LogLevel.Error);
+                }
             }
             public static void Postfix(SpriteBatch b, InventoryMenu __instance, ref object[] __state)
             {
-                if (__state is null)
-                    return;
-                __instance.actualInventory = (IList<Item>)__state[0];
-                __instance.inventory = (List<ClickableComponent>)__state[1];
-                DrawUIElements(b, __instance);
+                try
+                {
+                    if (__state is null)
+                        return;
+                    __instance.actualInventory = (IList<Item>)__state[0];
+                    __instance.inventory = (List<ClickableComponent>)__state[1];
+                    DrawUIElements(b, __instance);
+                } catch (Exception ex)
+                {
+                    SMonitor.Log($"Failed in {nameof(InventoryMenu_draw_Postfix)}:\n{ex}", LogLevel.Error);
+                }
             }
         }
         [HarmonyPatch(typeof(SeedShop), nameof(SeedShop.draw))]
