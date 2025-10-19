@@ -1,9 +1,5 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System;
 using StardewModdingAPI;
-using StardewModdingAPI.Utilities;
-using StardewValley;
 
 namespace CustomBackpack
 {
@@ -24,14 +20,6 @@ namespace CustomBackpack
         /// <remarks>Each mod can only be registered once, unless it's deleted via <see cref="Unregister"/> before calling this again.</remarks>
         void Register(IManifest mod, Action reset, Action save, bool titleScreenOnly = false);
 
-        /// <summary>Add a key binding at the current position in the form.</summary>
-        /// <param name="mod">The mod's manifest.</param>
-        /// <param name="getValue">Get the current value from the mod config.</param>
-        /// <param name="setValue">Set a new value in the mod config.</param>
-        /// <param name="name">The label text to show in the form.</param>
-        /// <param name="tooltip">The tooltip text shown when the cursor hovers on the field, or <c>null</c> to disable the tooltip.</param>
-        /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        void AddKeybind(IManifest mod, Func<SButton> getValue, Action<SButton> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
 
         /// <summary>Add a boolean option at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
@@ -51,22 +39,30 @@ namespace CustomBackpack
         /// <param name="min">The minimum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="max">The maximum allowed value, or <c>null</c> to allow any.</param>
         /// <param name="interval">The interval of values that can be selected.</param>
+        /// <param name="formatValue">Get the display text to show for a value, or <c>null</c> to show the number as-is.</param>
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string> tooltip = null, int? min = null, int? max = null, int? interval = null, Func<int, string> formatValue = null, string fieldId = null);
 
-        /// <summary>Add a string option at the current position in the form.</summary>
+        /// <summary>Add a float option at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
         /// <param name="getValue">Get the current value from the mod config.</param>
         /// <param name="setValue">Set a new value in the mod config.</param>
         /// <param name="name">The label text to show in the form.</param>
         /// <param name="tooltip">The tooltip text shown when the cursor hovers on the field, or <c>null</c> to disable the tooltip.</param>
-        /// <param name="allowedValues">The values that can be selected, or <c>null</c> to allow any.</param>
-        /// <param name="formatAllowedValue">Get the display text to show for a value from <paramref name="allowedValues"/>, or <c>null</c> to show the values as-is.</param>
+        /// <param name="min">The minimum allowed value, or <c>null</c> to allow any.</param>
+        /// <param name="max">The maximum allowed value, or <c>null</c> to allow any.</param>
+        /// <param name="interval">The interval of values that can be selected.</param>
+        /// <param name="formatValue">Get the display text to show for a value, or <c>null</c> to show the number as-is.</param>
         /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
-        void AddTextOption(IManifest mod, Func<string> getValue, Action<string> setValue, Func<string> name, Func<string> tooltip = null, string[] allowedValues = null, Func<string, string> formatAllowedValue = null, string fieldId = null);
+        void AddNumberOption(IManifest mod, Func<float> getValue, Action<float> setValue, Func<string> name, Func<string> tooltip = null, float? min = null, float? max = null, float? interval = null, Func<float, string> formatValue = null, string fieldId = null);
 
-        /// <summary>Remove a mod from the config UI and delete all its options and pages.</summary>
+        /// <summary>Add a key binding at the current position in the form.</summary>
         /// <param name="mod">The mod's manifest.</param>
-        void Unregister(IManifest mod);
+        /// <param name="getValue">Get the current value from the mod config.</param>
+        /// <param name="setValue">Set a new value in the mod config.</param>
+        /// <param name="name">The label text to show in the form.</param>
+        /// <param name="tooltip">The tooltip text shown when the cursor hovers on the field, or <c>null</c> to disable the tooltip.</param>
+        /// <param name="fieldId">The unique field ID for use with <see cref="OnFieldChanged"/>, or <c>null</c> to auto-generate a randomized ID.</param>
+        void AddKeybind(IManifest mod, Func<SButton> getValue, Action<SButton> setValue, Func<string> name, Func<string> tooltip = null, string fieldId = null);
     }
 }
