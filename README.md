@@ -1,4 +1,4 @@
-# The Return of Custom Backpack Framework - 1.0.0
+# The Return of Custom Backpack Framework - 1.1.0
 
 This is an update to the Custom Backpack Framework mod originally created by
 Aedenthorn. I have updated it to support Stardew Valley 1.6. It is
@@ -70,6 +70,26 @@ here:
     ]
 }
 ```
+
+## Changelog
+
+### v1.0.0
+
+Initial release, port of the original mod to support Stardew Valley 1.6.0
+
+### v1.0.1
+
+Minor release fixing an issue with Generic Mod Menu API. This version was
+published to NexusMods but the code was unfortunately never published to
+GitHub.
+
+### v1.1.0
+
+Add support for the GetScroll API method to enable interop with Convenient
+Inventory. Thanks to alanperrow for this work.
+
+Update the Pathoschild.Stardew.ModBuildConfig to latest stable version
+4.4.0.
 
 ## Credits
 
