@@ -179,6 +179,10 @@ namespace CustomBackpack
             return false;
         }
 
+        public static int GetScroll()
+        {
+            return scrolled.Value;
+        }
 
         public static void DrawUIElements(SpriteBatch b, InventoryMenu __instance)
         {
