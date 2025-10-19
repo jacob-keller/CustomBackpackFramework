@@ -75,3 +75,4 @@ here:
 
 * Aedenthorn for the original mod, and for making it open source
 * platinummyr for updating to Stardew Valley 1.6
+* alanperrow for the GetScroll API
