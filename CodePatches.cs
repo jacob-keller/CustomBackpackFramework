@@ -455,7 +455,16 @@ namespace CustomBackpack
 
             public static bool Farmer_shiftToolbar_Prefix(Farmer __instance, bool right)
             {
-                if (!Config.ModEnabled || Config.ShiftRows < 1 || Config.ShiftRows >= __instance.Items.Count / 12 || __instance.Items is null || __instance.Items.Count < 37 || __instance.UsingTool || Game1.dialogueUp || !__instance.CanMove || __instance.Items.HasAny() || Game1.eventUp || Game1.farmEvent != null)
+                if (!Config.ModEnabled
+                    || __instance.Items is null
+                    || Config.ShiftRows < 1
+                    || Config.ShiftRows >= __instance.Items.Count / 12
+                    || __instance.Items.Count < 37
+                    || __instance.UsingTool
+                    || Game1.dialogueUp
+                    || !__instance.CanMove
+                    || Game1.eventUp
+                    || Game1.farmEvent != null)
                     return true;
                 if (Config.ShiftRows == 1)
                     return false;
