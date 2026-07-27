@@ -7,6 +7,7 @@ namespace CustomBackpack
         public bool SetPlayerSlots(int slots, bool force);
         public bool ChangeScroll(InventoryMenu menu, int delta);
         public int GetScroll();
+        public int GetShiftRows();
     }
     public class CustomBackpackApi : ICustomBackpackApi
     {
@@ -21,6 +22,10 @@ namespace CustomBackpack
         public int GetScroll()
         {
             return ModEntry.GetScroll();
+        }
+        public int GetShiftRows()
+        {
+            return ModEntry.GetShiftRows();
         }
     }
 }
