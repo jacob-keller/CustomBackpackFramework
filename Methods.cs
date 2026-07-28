@@ -184,6 +184,11 @@ namespace CustomBackpack
             return scrolled.Value;
         }
 
+        public static int GetShiftRows()
+        {
+            return Config?.ShiftRows ?? new ModConfig().ShiftRows;
+        }
+
         public static void DrawUIElements(SpriteBatch b, InventoryMenu __instance)
         {
             int mouseX = Game1.getMouseX();
