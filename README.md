@@ -1,4 +1,4 @@
-# The Return of Custom Backpack Framework - 1.1.0
+# The Return of Custom Backpack Framework - 1.2.0
 
 This is an update to the Custom Backpack Framework mod originally created by
 Aedenthorn. I have updated it to support Stardew Valley 1.6. It is
@@ -90,6 +90,14 @@ Inventory. Thanks to alanperrow for this work.
 
 Update the Pathoschild.Stardew.ModBuildConfig to latest stable version
 4.4.0.
+
+### v1.2.0
+
+Fix the toolbar shifting prefix function to work when there are items in the
+inventory.
+
+Add GetShiftRows API method to enable (potential) interop with Toolbar-shift
+and other related mods.
 
 ## Credits
 
