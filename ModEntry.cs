@@ -128,10 +128,15 @@ namespace CustomBackpack
                 postfix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.InventoryMenu_draw_Postfix))
             );
 
-            harmony.Patch(
-                original: AccessTools.Method(typeof(SeedShop), nameof(SeedShop.draw)),
-                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.SeedShop_draw_Prefix))
-            );
+            var seedShopDraw = AccessTools.Method(typeof(SeedShop), nameof(SeedShop.draw));
+            if (seedShopDraw != null) {
+                harmony.Patch(
+                    original: seedShopDraw,
+                    prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.SeedShop_draw_Prefix))
+                );
+            } else {
+                SMonitor.Log("SeedShop.draw method not found on this platform. SeedShop draw patch will not be applied.", LogLevel.Warn);
+            }
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.performAction), new Type[] { typeof(string[]), typeof(Farmer), typeof(Location) }),
